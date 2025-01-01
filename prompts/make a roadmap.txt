@@ -1,0 +1,7 @@
+Based on the GitHub issues, suggest a roadmap for addressing the top 5 problems. Consider:
+- Engagement and frustration scores.
+- Common themes in complaints.
+- Impact on user productivity or satisfaction.
+- Feasibility of solutions.
+
+Provide a roadmap with priority levels (High, Medium, Low) for each issue and a brief rationale for each.

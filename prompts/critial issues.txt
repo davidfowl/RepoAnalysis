@@ -1,0 +1,7 @@
+From the dataset, identify the top 5 most critical issues. Use the following criteria:
+- Engagement score
+- Frustration score
+- Sentiment in comments
+- Recurrence of keywords indicating urgency (e.g., "urgent", "critical", "important").
+
+Provide the top 5 issues, each with its title, URL, engagement score, frustration score, and a short explanation of why it is critical.

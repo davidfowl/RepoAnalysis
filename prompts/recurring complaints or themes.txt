@@ -1,0 +1,7 @@
+Analyze the comments from the dataset and identify recurring complaints or themes. Highlight specific examples and link them back to the issue title and URL:
+---
+Issue Title: {issue_title}
+Issue URL: {issue_url}
+Comments: {comments}
+---
+Provide a summary of complaints in plain text with examples.
