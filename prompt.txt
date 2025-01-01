@@ -1,0 +1,87 @@
+---
+**Objective**: Given a dataset of issues (like GitHub issues), I want to perform a detailed analysis, categorization, scoring, frustration analysis, and generate a roadmap. The categorization should be based on keyword matching, **semantic understanding** of the issue description, and **comment analysis**. The content of the issue bodies and comments should **not** be included in the output, aside from the metadata used for categorization.
+
+---
+
+### **Final Engagement Score Formula**
+
+Use the following formula to calculate the **Engagement Score** for each issue:
+
+\[
+S = \frac{w_c \cdot C^{1.5} \cdot C_{penalty} \cdot w_d \cdot (D + 0.1) \cdot (1 + w_l \cdot A) \cdot (1 + w_u \cdot U)}{1 + w_a \cdot \sqrt{A + \epsilon}}
+\]
+
+Where:
+- **\(C\)**: Total number of comments.
+- **\(C_{penalty}\)**: 
+  - \(C_{penalty} = 0.25\) if \(C < 10\),
+  - \(C_{penalty} = 1.0\) otherwise.
+- **\(D\)**: Distribution factor, representing how evenly comments are spread over the issue's lifespan.
+- **\(A\)**: Age of the issue in years (\(A = \text{(LastUpdated - CreatedAt)}\)).
+- **\(\epsilon = 0.1\)**: Small constant added to prevent division by zero or undervaluing very recent issues.
+- **\(U\)**: Total number of upvotes (if available, otherwise treated as 0).
+- **Weights**:
+  - **\(w_c = 2\)**: Emphasizes the number of comments.
+  - **\(w_d = 1\)**: Balances the importance of distribution.
+  - **\(w_l = 0.5\)**: Boosts older issues for longevity.
+  - **\(w_u = 0.5\)**: Boosts issues with upvotes to reflect their priority/interest.
+  - **\(w_a = 1\)**: Penalizes older issues for staleness.
+
+### **Handling Missing Upvotes**:
+- **If the Upvotes Field is Missing**: Treat **Upvotes** as 0, meaning the **Engagement Score** will be calculated without any boost from upvotes.
+- **If Upvotes Exist**: The **Upvotes** field will **boost the engagement score** by contributing to the overall calculation of the score.
+
+---
+
+### **Frustration Score Formula**
+
+To quantify the **frustration** users are experiencing with various issues, we can create a **Frustration Score** based on several factors such as:
+
+\[
+F = \left( w_c \cdot C \right) + \left( w_s \cdot S \right) + \left( w_r \cdot R \right) + \left( w_t \cdot T \right)
+\]
+
+Where:
+- **\(C\)** = Number of comments on the issue.
+- **\(S\)** = Sentiment score, based on the proportion of negative sentiments (e.g., using keywords like "bug", "error", "frustrating").
+- **\(R\)** = Recurrence factor, a score indicating how often users bring up the issue.
+- **\(T\)** = Time factor, where older issues get higher scores.
+
+---
+
+### **Step-by-Step Process**:
+1. **Number of Comments**: Directly taken from the dataset.
+2. **Sentiment Analysis**: We analyze the comments for negative keywords related to frustration.
+3. **Recurrence**: Based on how many times the issue has been referenced in other issues or re-opened over time.
+4. **Time Opened**: Calculate the age of the issue and increase the frustration score if the issue has been unresolved for a long time.
+
+---
+
+### **Initial Weights Proposal**:
+- **\(w_c = 1\)**: The number of comments is a significant indicator of frustration.
+- **\(w_s = 2\)**: Negative sentiment typically correlates strongly with frustration.
+- **\(w_r = 1.5\)**: Recurrence is important but less impactful than sentiment or comments.
+- **\(w_t = 0.5\)**: Older issues cause more frustration, but not as much as direct sentiment or comment count.
+
+---
+
+### **Table Output (CSV)**:
+
+The output dataset will now include **Upvotes** as part of the analysis, along with **Engagement Score** and **Frustration Score**. The columns in the CSV should be as follows:
+
+| **Title**                                                   | **URL**                                                     | **Comment Count** | **Unique Commenters** | **Upvotes** | **Engagement Score** | **Years Opened** | **Frustration Score** |
+|-------------------------------------------------------------|-------------------------------------------------------------|-------------------|-----------------------|-------------|----------------------|------------------|-----------------------|
+| Consider requiring Antiforgery Validation by default        | https://github.com/dotnet/aspnetcore/issues/4813            | 29                | 22                    | 1           | 30.91                | 3.2              | 65.4                  |
+| We need a solution for API Explorer + Custom ModelBinder    | https://github.com/dotnet/aspnetcore/issues/4825            | 25                | 18                    | 19          | 45.30                | 2.5              | 72.1                  |
+| Improve validation for non-interactive consumption          | https://github.com/dotnet/aspnetcore/issues/4840            | 30                | 12                    | 0           | 35.72                | 3.0              | 50.3                  |
+| Add a way to access reason of a Mvc filter failure          | https://github.com/dotnet/aspnetcore/issues/4847            | 10                | 5                     | 0           | 20.10                | 4.0              | 40.0                  |
+| Ability to translate all DataAnnotations without ErrorMessage | https://github.com/dotnet/aspnetcore/issues/4848            | 15                | 8                     | 44          | 60.72                | 3.5              | 80.2                  |
+
+---
+
+### **Outcome**:
+1. **Upvotes** are included in the calculation of the **Engagement Score** if available, and treated as 0 if missing. This ensures the formula works for both new and older datasets.
+2. The **Frustration Score** and other metrics remain unchanged, providing a **comprehensive view** of issue engagement and user frustration.
+3. The updated table will reflect **Engagement Score** and **Frustration Score** based on these new variables, ensuring accurate insights across datasets.
+
+---
