@@ -1,9 +1,5 @@
 # RepoAnalysis
 
-nodejs\node
-
-## Repository Summary
-
 This repository stores datasets in CSV format containing issue lists for popular repositories. Each issue is annotated with engagement and frustration scores. The raw dataset and prompts are not available yet.
 
 ### **Final Engagement Score Formula**
